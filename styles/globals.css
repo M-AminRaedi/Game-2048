@@ -1,15 +1,17 @@
 :root {
-  --primaty-background: #faf8ef;
+  --primary-background: #faf8ef;
   --seconderay-background: #bbada0;
-  --primaty-text-color: #776e65;
+  --primary-text-color: #776e65;
   --cell-background: #cac1b5;
+  --tile-background: #eee4da;
   --pixel-size: 8px;
+  --primary-text-color: #776e65;
 }
 
 body {
   margin: 0;
-  color: var(--primaty-text-color);
-  background: var(--primaty-backgrund);
+  color: var(--primary-text-color);
+  background: var(--primary-backgrund);
   font-size: calc(var(--pixel-size) * 2.25);
   line-height: calc(var(--pixel-size) * 3.5);
   font-family:
