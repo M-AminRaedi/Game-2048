@@ -30,6 +30,7 @@ export default function Board() {
         dispatch({ type: "move_right" });
         break;
     }
+    dispatch({ type: "clean_up" });
   };
 
   //-------------------// RENDER GRID //------------------------
