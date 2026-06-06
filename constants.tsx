@@ -1,2 +1,4 @@
 export const tileCountPerDimension = 4;
-export const containerWidth = 288;
+export const containerWidth = 288; //pixel
+export const mergeAnimationDuration = 100; //ms
+export const moveAnimationDuration = 200; //ms

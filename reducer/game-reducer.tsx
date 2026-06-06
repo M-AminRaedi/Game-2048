@@ -1,6 +1,6 @@
 import { tileCountPerDimension } from "@/constants";
 import { Tile, TileMap } from "@/models/tile";
-import {  flattenDeep, isNil,  } from "lodash";
+import { flattenDeep, isNil } from "lodash";
 import { uid } from "uid";
 
 type State = { board: string[][]; tiles: TileMap };
