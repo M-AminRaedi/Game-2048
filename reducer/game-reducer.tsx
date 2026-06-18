@@ -3,7 +3,7 @@ import { Tile, TileMap } from "@/models/tile";
 import { flattenDeep, isNil } from "lodash";
 import { uid } from "uid";
 
-type State = { board: string[][]; tiles: TileMap };
+type State = { board: string[][]; tiles: TileMap; tilesByIds: string[] };
 type Action =
   | { type: "create_tile"; tile: Tile }
   | { type: "clean_up" }
@@ -23,6 +23,7 @@ function createBoard() {
 export const initialState: State = {
   board: createBoard(),
   tiles: {},
+  tilesByIds: [],
 };
 
 export default function gameReducer(
@@ -30,7 +31,7 @@ export default function gameReducer(
   action: Action,
 ) {
   switch (action.type) {
-    //-------------------// CREATE TILE //------------------------
+    //-------------------// CLEAN UP //------------------------
     case "clean_up": {
       const flattedBoard = flattenDeep(state.board);
       const newTiles: TileMap = flattedBoard.reduce(
@@ -45,8 +46,11 @@ export default function gameReducer(
       return {
         ...state,
         tiles: newTiles,
+        tilesByIds: Object.keys(newTiles),
       };
     }
+
+    //-------------------// CREATE TILE //------------------------
     case "create_tile": {
       const tileId = uid();
       const [x, y] = action.tile.position;
@@ -61,6 +65,7 @@ export default function gameReducer(
           ...state.tiles,
           [tileId]: { id: tileId, ...action.tile },
         },
+        tilesByIds: [...state.tilesByIds, tileId],
       };
     }
 
@@ -108,6 +113,7 @@ export default function gameReducer(
         ...state,
         board: newBoard,
         tiles: newTiles,
+        tilesByIds: Object.keys(newTiles), // ✅ fix
       };
     }
 
@@ -121,7 +127,7 @@ export default function gameReducer(
         let newY = tileCountPerDimension - 1;
         let previousTile: Tile | undefined;
 
-        for (let y = 0; y < tileCountPerDimension; y++) {
+        for (let y = tileCountPerDimension - 1; y >= 0; y--) {
           const tileId = state.board[y][x];
           const currentTile = state.tiles[tileId];
 
@@ -155,6 +161,7 @@ export default function gameReducer(
         ...state,
         board: newBoard,
         tiles: newTiles,
+        tilesByIds: Object.keys(newTiles), // ✅ fix
       };
     }
 
@@ -197,14 +204,16 @@ export default function gameReducer(
           }
         }
       }
+
       return {
         ...state,
         board: newBoard,
         tiles: newTiles,
+        tilesByIds: Object.keys(newTiles), // ✅ fix
       };
     }
 
-    //-------------------/ / MOVE RIGHT //------------------------
+    //-------------------// MOVE RIGHT //------------------------
 
     case "move_right": {
       const newBoard = createBoard();
@@ -250,6 +259,7 @@ export default function gameReducer(
         ...state,
         board: newBoard,
         tiles: newTiles,
+        tilesByIds: Object.keys(newTiles), // ✅ fix
       };
     }
 
