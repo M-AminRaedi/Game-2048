@@ -5,7 +5,7 @@ export default function SocialLinks() {
     <div
       style={{
         textAlign: "center",
-        marginTop: "1rem",
+        marginTop: "5px",
         padding: "1rem",
         color: "#6b7280",
         fontSize: "0.95rem",

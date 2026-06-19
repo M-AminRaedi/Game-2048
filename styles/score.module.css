@@ -3,7 +3,7 @@
   border: calc(var(--pixel-size) * 0.5) solid var(--secondary-background);
   border-radius: calc(var(--pixel-size) * 0.75);
   color: var(--tile-background);
-  font-size: calc(var(--pixel-size) * 1.5);
+  font-size: calc(var(--pixel-size) * 1.8); /* 👈 بزرگ‌تر شد */
   line-height: calc(var(--pixel-size) * 3);
   font-weight: bold;
   text-align: center;
@@ -11,18 +11,18 @@
 }
 
 .score > div {
-  font-size: calc(var(--pixel-size) * 2.5);
+  font-size: calc(var(--pixel-size) * 3); /* 👈 بزرگ‌تر شد */
   color: var(--secondary-text-color);
 }
 
 @media (min-width: 512px) {
   .score {
     border: calc(var(--pixel-size) * 1) solid var(--secondary-background);
-    font-size: calc(var(--pixel-size) * 2);
+    font-size: calc(var(--pixel-size) * 2.3); /* 👈 بزرگ‌تر شد */
     line-height: calc(var(--pixel-size) * 3.5);
   }
 
   .score > div {
-    font-size: calc(var(--pixel-size) * 3.5);
+    font-size: calc(var(--pixel-size) * 4); /* 👈 بزرگ‌تر شد */
   }
 }
