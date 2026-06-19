@@ -13,9 +13,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "types": ["node", "jest"],
-
-    "baseUrl": ".",
+    "types": ["node", "jest", "react"],
     "paths": {
       "@/*": ["./*"]
     }

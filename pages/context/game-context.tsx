@@ -4,6 +4,7 @@ import {
   useEffect,
   useReducer,
   useMemo,
+  useCallback,
 } from "react";
 import { isNil, throttle } from "lodash";
 import { Tile } from "../../models/tile";
@@ -35,10 +36,8 @@ export const GameContext = createContext<GameContextType>({
 export default function GameProvider({ children }: PropsWithChildren) {
   const [gameState, dispatch] = useReducer(gameReducer, initialState);
 
-  // ---------------- EMPTY CELLS ----------------
-  const getEmptyCells = () => {
+  const getEmptyCells = useCallback(() => {
     const results: [number, number][] = [];
-
     for (let x = 0; x < tileCountPerDimension; x++) {
       for (let y = 0; y < tileCountPerDimension; y++) {
         if (isNil(gameState.board[y][x])) {
@@ -46,18 +45,13 @@ export default function GameProvider({ children }: PropsWithChildren) {
         }
       }
     }
-
     return results;
-  };
+  }, [gameState.board]);
 
-  // ---------------- RANDOM TILE ----------------
-  const appendRandomTile = () => {
+  const appendRandomTile = useCallback(() => {
     const emptyCells = getEmptyCells();
-
     if (!emptyCells.length) return;
-
     const cellIndex = Math.floor(Math.random() * emptyCells.length);
-
     dispatch({
       type: "create_tile",
       tile: {
@@ -65,14 +59,12 @@ export default function GameProvider({ children }: PropsWithChildren) {
         value: 2,
       },
     });
-  };
+  }, [getEmptyCells]);
 
-  // ---------------- GET TILES ----------------
-  const getTiles = () => {
+  const getTiles = useCallback(() => {
     return gameState.tilesByIds.map((tileId) => gameState.tiles[tileId]);
-  };
+  }, [gameState.tilesByIds, gameState.tiles]);
 
-  // ---------------- MOVE (THROTTLED) ----------------
   const moveTiles = useMemo(
     () =>
       throttle(
@@ -85,34 +77,22 @@ export default function GameProvider({ children }: PropsWithChildren) {
     [dispatch],
   );
 
-  // cleanup throttle
   useEffect(() => {
     return () => {
       moveTiles.cancel?.();
     };
   }, [moveTiles]);
 
-  // ---------------- START GAME ----------------
-  const startGame = () => {
+  const startGame = useCallback(() => {
     dispatch({ type: "reset_game" });
+    dispatch({ type: "create_tile", tile: { position: [0, 1], value: 2 } });
+    dispatch({ type: "create_tile", tile: { position: [0, 2], value: 2 } });
+  }, []);
 
-    dispatch({
-      type: "create_tile",
-      tile: { position: [0, 1], value: 2 },
-    });
-
-    dispatch({
-      type: "create_tile",
-      tile: { position: [0, 2], value: 2 },
-    });
-  };
-
-  // ---------------- GAME STATE CHECK ----------------
-  const checkGameState = () => {
+  const checkGameState = useCallback(() => {
     const isWon = Object.values(gameState.tiles).some(
       (t) => t.value === gameWinTileValue,
     );
-
     if (isWon) {
       dispatch({ type: "update_status", status: "won" });
       return;
@@ -127,42 +107,31 @@ export default function GameProvider({ children }: PropsWithChildren) {
           isNil(board[x][y]) ||
           isNil(board[x + 1][y]) ||
           isNil(board[x][y + 1])
-        ) {
+        )
           return;
-        }
-
-        if (tiles[board[x][y]]?.value === tiles[board[x + 1][y]]?.value) {
-          return;
-        }
-
-        if (tiles[board[x][y]]?.value === tiles[board[x][y + 1]]?.value) {
-          return;
-        }
+        if (tiles[board[x][y]]?.value === tiles[board[x + 1][y]]?.value) return;
+        if (tiles[board[x][y]]?.value === tiles[board[x][y + 1]]?.value) return;
       }
     }
 
     dispatch({ type: "update_status", status: "lost" });
-  };
+  }, [gameState]);
 
-  // ---------------- EFFECTS ----------------
   useEffect(() => {
     if (!gameState.hasChanged) return;
-
     const id = setTimeout(() => {
       dispatch({ type: "clean_up" });
       appendRandomTile();
     }, mergeAnimationDuration);
-
     return () => clearTimeout(id);
-  }, [gameState.hasChanged]);
+  }, [gameState.hasChanged, appendRandomTile]);
 
   useEffect(() => {
     if (!gameState.hasChanged) {
       checkGameState();
     }
-  }, [gameState.hasChanged]);
+  }, [gameState.hasChanged, checkGameState]);
 
-  // ---------------- PROVIDER ----------------
   return (
     <GameContext.Provider
       value={{
