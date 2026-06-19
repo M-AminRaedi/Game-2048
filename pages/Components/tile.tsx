@@ -18,6 +18,10 @@ export default function Tile({ position, value }: TileProps) {
   const previousValue = usePreviousProps<number>(value);
   const hasChanged = previousValue !== value;
 
+  if (!position || position.length < 2) {
+    return null;
+  }
+
   const positionToPixels = (position: number) =>
     (position / tileCountPerDimension) * containerWidth;
 
