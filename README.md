@@ -5,7 +5,7 @@ A fully playable **2048 game built with React + Next.js**
 ---
 
 ## 🚀 Live Demo
-👉 https://YOUR-VERCEL-LINK.vercel.app
+👉 https://game-2048-three-lilac.vercel.app/
 
 ---
 
