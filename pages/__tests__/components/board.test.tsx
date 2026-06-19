@@ -1,4 +1,4 @@
-import Board from "@/pages/Component/board";
+import Board from "@/pages/Components/board";
 import GameProvider from "@/pages/context/game-context";
 import { render } from "@testing-library/react";
 describe("Board", () => {
